@@ -12,8 +12,4 @@
 #define ROBOT_STATE_SHM_KEY 3234
 #define ROBOT_STATE_SEM_KEY 3235
 
-// Macro to control if the end-effector is used,
-// which has no influence on this package.
-#define USE_END_EFFECTOR
-
 #endif
