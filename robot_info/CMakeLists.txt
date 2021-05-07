@@ -15,15 +15,27 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+if(END_EFFECTOR)
+  add_compile_options(-DUSE_END_EFFECTOR)
+endif()
+
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 
+if(END_EFFECTOR)
 add_library(${PROJECT_NAME} SHARED
   src/arm_info.cpp
   src/end_eff_info.cpp
   src/robot_info.cpp
 )
+endif()
+if(NOT END_EFFECTOR)
+add_library(${PROJECT_NAME} SHARED
+  src/arm_info.cpp
+  src/robot_info.cpp
+)
+endif()
 target_include_directories(${PROJECT_NAME} 
   PRIVATE 
   include

@@ -5,9 +5,11 @@
 #define ARM_SHM_FILE "/dev/robot_arm_shm"
 #define ARM_SEM_FILE "/dev/robot_arm_sem"
 
+#ifdef USE_END_EFFECTOR
 #define END_EFF_DOF 2
 #define END_EFF_SHM_FILE "/dev/robot_end_effector_shm"
 #define END_EFF_SEM_FILE "/dev/robot_end_effector_sem"
+#endif
 
 #define ROBOT_STATE_SHM_FILE "/dev/robot_state_shm"
 #define ROBOT_STATE_SEM_FILE "/dev/robot_state_sem"

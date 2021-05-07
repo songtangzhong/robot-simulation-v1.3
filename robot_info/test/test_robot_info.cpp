@@ -46,6 +46,7 @@ int main(int argc, char ** argv)
         std::cout << "control_modes[" << j << "]: " << robot->arm_->control_modes_[j] << std::endl;
     }
 
+#ifdef USE_END_EFFECTOR
     ////////////////////////////////////////////////////////////////////////////////////////////////
     std::cout << "end-effector info:" << std::endl;
     std::cout << "shm_key: " << robot->end_eff_->shm_key_ << std::endl;
@@ -79,6 +80,7 @@ int main(int argc, char ** argv)
     {
         std::cout << "control_modes[" << j << "]: " << robot->end_eff_->control_modes_[j] << std::endl;
     }
+#endif
 
     rclcpp::shutdown();
     return 0;
