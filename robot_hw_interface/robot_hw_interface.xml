@@ -1,0 +1,9 @@
+<library path="robot_hw_interface">
+  <class name="robot_hw/RobotHardware"
+         type="robot_hw::RobotHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+        robot hardware interface plugin
+    </description>
+  </class>
+</library>

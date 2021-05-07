@@ -1,0 +1,51 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # Hz
+
+    joint_state_controller:
+      type: joint_state_controller/JointStateController
+
+    position_controllers:
+      type: position_controllers/JointGroupPositionController
+
+    velocity_controllers:
+      type: velocity_controllers/JointGroupVelocityController
+
+    effort_controllers:
+      type: effort_controllers/JointGroupEffortController
+
+position_controllers:
+  ros__parameters:
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+    interface_name: position
+
+velocity_controllers:
+  ros__parameters:
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+    interface_name: velocity
+
+effort_controllers:
+  ros__parameters:
+    joints:
+      - panda_joint1
+      - panda_joint2
+      - panda_joint3
+      - panda_joint4
+      - panda_joint5
+      - panda_joint6
+      - panda_joint7
+    interface_name: effort
