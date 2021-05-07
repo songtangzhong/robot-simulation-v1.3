@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<robot name="end_effector" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="gazebo" default="true" />
+
+    <!-- Arm-Hand Fixed Joint -->
+    <joint name="panda_hand_joint" type="fixed">
+        <origin xyz="0 0 0.107" rpy="0 0 -0.7853981633974483" />
+        <parent link="panda_link7" />
+        <child link="panda_hand" />
+    </joint>
+
+
+    <!-- Hand Links -->
+    <link name="panda_hand">
+        <visual name="panda_hand_visual">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://robot_description/meshes/visual/hand.dae" />
+            </geometry>
+        </visual>
+        <collision name="panda_hand_collision">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://robot_description/meshes/collision/hand.stl" />
+            </geometry>
+        </collision>
+        <xacro:if value="$(arg gazebo)">
+            <inertial>
+                <origin xyz="-6.7624e-06 0.00152435 0.0275912" rpy="0 0 0" />
+                <mass value="0.14060765127978503" />
+                <inertia
+                    ixx="0.0005365450414352072"
+                    iyy="7.70511954783727e-05"
+                    izz="0.0004938176882694914"
+                    ixy="1.7911952957732454e-08"
+                    ixz="-2.320071910601251e-08"
+                    iyz="4.681149945315967e-08" />
+            </inertial>
+        </xacro:if>
+    </link>
+
+    <link name="panda_leftfinger">
+        <visual name="panda_leftfinger_visual">
+            <geometry>
+                <mesh filename="package://robot_description/meshes/visual/finger.dae" />
+            </geometry>
+        </visual>
+        <collision name="panda_leftfinger_collision">
+            <geometry>
+                <mesh filename="package://robot_description/meshes/collision/finger.stl" />
+            </geometry>
+        </collision>
+        <xacro:if value="$(arg gazebo)">
+            <inertial>
+                <origin xyz="-6.2561e-06 0.00227781 -0.0277116" rpy="0 0 0" />
+                <mass value="0.2238453537819424" />
+                <inertia
+                    ixx="6.74804167363695e-05"
+                    iyy="6.627189221641395e-05"
+                    izz="1.550396267804825e-05"
+                    ixy="-4.1027443646025676e-09"
+                    ixz="1.8693673970152995e-08"
+                    iyz="1.1967548474390802e-05" />
+            </inertial>
+        </xacro:if>
+    </link>
+
+    <link name="panda_rightfinger">
+        <visual name="panda_rightfinger_visual">
+            <origin xyz="0 0 0" rpy="0 0 3.141592653589793" />
+            <geometry>
+                <mesh filename="package://robot_description/meshes/visual/finger.dae" />
+            </geometry>
+        </visual>
+        <collision name="panda_rightfinger_collision">
+            <origin xyz="0 0 0" rpy="0 0 3.141592653589793" />
+            <geometry>
+                <mesh filename="package://robot_description/meshes/collision/finger.stl" />
+            </geometry>
+        </collision>
+        <xacro:if value="$(arg gazebo)">
+            <inertial>
+                <origin xyz="-6.2561e-06 0.00227781 -0.0277116" rpy="0 0 3.141592653589793" />
+                <mass value="0.2238453537819424" />
+                <inertia
+                    ixx="6.74804167363695e-05"
+                    iyy="6.627189221641395e-05"
+                    izz="1.550396267804825e-05"
+                    ixy="-4.1027443646025676e-09"
+                    ixz="1.8693673970152995e-08"
+                    iyz="1.1967548474390802e-05" />
+            </inertial>
+        </xacro:if>
+    </link>
+
+
+    <!-- Finger Joints -->
+    <joint name="panda_finger_joint1" type="prismatic">
+        <origin xyz="0 0 0.0584" rpy="0 0 0" />
+        <parent link="panda_hand" />
+        <child link="panda_leftfinger" />
+        <axis xyz="0 1 0" />
+        <limit effort="20" lower="0.0" upper="0.04" velocity="0.2" />
+        <xacro:if value="$(arg gazebo)">
+            <dynamics damping="10" friction="0.5" />
+        </xacro:if>
+    </joint>
+
+    <joint name="panda_finger_joint2" type="prismatic">
+        <origin xyz="0 0 0.0584" rpy="0 0 0" />
+        <parent link="panda_hand" />
+        <child link="panda_rightfinger" />
+        <axis xyz="0 -1 0" />
+        <limit effort="20" lower="0.0" upper="0.04" velocity="0.2" />
+        <xacro:if value="$(arg gazebo)">
+            <dynamics damping="10" friction="0.5" />
+        </xacro:if>
+    </joint>
+
+
+    <!-- End-effector -->
+    <link name="panda_link8" />
+
+    <joint name="end_effector_frame_fixed_joint" type="fixed">
+        <origin xyz="0 0 0.103" rpy="0 0 0" />
+        <parent link="panda_hand" />
+        <child link="panda_link8" />
+    </joint>
+
+    <!-- Gazebo property -->
+    <xacro:if value="$(arg gazebo)">
+        <gazebo reference="panda_hand">
+            <mu1>1.05</mu1>
+            <mu2>1.05</mu2>
+            <material>Gazebo/Grey</material>
+        </gazebo>
+
+        <gazebo reference="panda_leftfinger">
+            <mu1>1.05</mu1>
+            <mu2>1.05</mu2>
+            <material>Gazebo/DarkGrey</material>
+        </gazebo>
+
+        <gazebo reference="panda_rightfinger">
+            <mu1>1.05</mu1>
+            <mu2>1.05</mu2>
+            <material>Gazebo/DarkGrey</material>
+        </gazebo>
+    </xacro:if>
+
+</robot>
