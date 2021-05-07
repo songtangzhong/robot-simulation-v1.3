@@ -34,6 +34,7 @@ hardware_interface::return_type RobotHardware::configure(
           "Create arm semaphore failed.");
   }
 
+#ifdef USE_END_EFFECTOR
   ///////////////////////////////////////////////////////////////////////////////////////////
   end_eff_shm_id_ = shm_common::create_shm(robot_->end_eff_->shm_key_, &end_eff_shm_);
   if (end_eff_shm_id_ == SHM_STATE_NO)
@@ -48,6 +49,7 @@ hardware_interface::return_type RobotHardware::configure(
       RCLCPP_ERROR(rclcpp::get_logger("RobotHardware"), 
           "Create end-effector semaphore failed.");
   }
+#endif
 
   status_ = hardware_interface::status::CONFIGURED;
   return hardware_interface::return_type::OK;
@@ -77,6 +79,7 @@ RobotHardware::export_state_interfaces()
         robot_->arm_->joint_names_[j], hardware_interface::HW_IF_EFFORT, &robot_->arm_->cur_efforts_[j]));
   }
 
+#ifdef USE_END_EFFECTOR
   //////////////////////////////////////////////////////////////////////////////////////////////
   for (unsigned int j = 0; j < robot_->end_eff_->dof_; j++) 
   {
@@ -96,6 +99,7 @@ RobotHardware::export_state_interfaces()
       hardware_interface::StateInterface(
         robot_->end_eff_->joint_names_[j], hardware_interface::HW_IF_EFFORT, &robot_->end_eff_->cur_efforts_[j]));
   }
+#endif
 
   return state_interfaces;
 }
@@ -183,6 +187,7 @@ hardware_interface::return_type RobotHardware::read()
     robot_->arm_->cur_efforts_[j] = arm_shm_->cur_efforts_[j];
   }
 
+#ifdef USE_END_EFFECTOR
   sem_common::semaphore_p(end_eff_sem_id_);
   for (unsigned int j = 0; j < robot_->end_eff_->dof_; j++) 
   {
@@ -191,6 +196,7 @@ hardware_interface::return_type RobotHardware::read()
     robot_->end_eff_->cur_efforts_[j] = end_eff_shm_->cur_efforts_[j];
   }
   sem_common::semaphore_v(end_eff_sem_id_);
+#endif
 
   return hardware_interface::return_type::OK;
 }
