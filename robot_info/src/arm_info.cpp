@@ -1,5 +1,7 @@
 #include <robot_info/arm_info.h>
 #include <robot_info/robot_macro.h>
+#include <rclcpp/rclcpp.hpp>
+#include <sys/sem.h>
 
 namespace arm_info
 {
@@ -33,8 +35,19 @@ ArmInfo::ArmInfo()
     cur_positions_[3] = cmd_positions_[3] =  -1.5;
     cur_positions_[3] = cmd_positions_[5] = 1.88;
 
-    shm_key_ = ARM_SHM_KEY;
-    sem_key_ = ARM_SEM_KEY;
+    shm_key_ = ftok(ARM_SHM_FILE, 1);
+    if (shm_key_ == -1)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("arm_info"),
+            "Generate key value of arm shared memory failed.");
+    }
+
+    sem_key_ = ftok(ARM_SEM_FILE, 1);
+    if (sem_key_ == -1)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("arm_info"),
+            "Generate key value of arm semaphore failed.");
+    }
 }
 
 ArmInfo::~ArmInfo(){}

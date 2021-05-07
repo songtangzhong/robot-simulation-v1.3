@@ -1,5 +1,6 @@
 #include <robot_info/end_eff_info.h>
 #include <robot_info/robot_macro.h>
+#include <sys/sem.h>
 
 namespace end_eff_info
 {
@@ -30,8 +31,19 @@ EndEffInfo::EndEffInfo()
         control_modes_[j] = position_mode_; // default: position mode
     }
 
-    shm_key_ = END_EFF_SHM_KEY;
-    sem_key_ = END_EFF_SEM_KEY;
+    shm_key_ = ftok(END_EFF_SHM_FILE, 1);
+    if (shm_key_ == -1)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("end_eff_info"),
+            "Generate key value of end-effector shared memory failed.");
+    }
+
+    sem_key_ = ftok(END_EFF_SEM_FILE, 1);
+    if (sem_key_ == -1)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("end_eff_info"),
+            "Generate key value of end-effector semaphore failed.");
+    }
 }
 
 EndEffInfo::~EndEffInfo(){}

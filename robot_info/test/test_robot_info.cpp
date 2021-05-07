@@ -9,7 +9,13 @@ int main(int argc, char ** argv)
     std::shared_ptr<robot_info::RobotInfo> robot = 
         std::make_shared<robot_info::RobotInfo>();
 
+    std::cout << "robot info:" << std::endl;
+    std::cout << "state_shm_key: " << robot->state_shm_key_ << std::endl;
+    std::cout << "state_sem_key: " << robot->state_sem_key_ << std::endl;
+
     std::cout << "arm info:" << std::endl;
+    std::cout << "shm_key: " << robot->arm_->shm_key_ << std::endl;
+    std::cout << "sem_key: " << robot->arm_->sem_key_ << std::endl;
     std::cout << "dof: " << robot->arm_->dof_ << std::endl;
     for (unsigned int j=0; j< robot->arm_->dof_; j++)
     {
@@ -42,6 +48,8 @@ int main(int argc, char ** argv)
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     std::cout << "end-effector info:" << std::endl;
+    std::cout << "shm_key: " << robot->end_eff_->shm_key_ << std::endl;
+    std::cout << "sem_key: " << robot->end_eff_->sem_key_ << std::endl;
     std::cout << "dof: " << robot->end_eff_->dof_ << std::endl;
     for (unsigned int j=0; j< robot->end_eff_->dof_; j++)
     {
