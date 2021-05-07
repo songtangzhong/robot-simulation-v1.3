@@ -27,6 +27,7 @@ sudo touch /dev/robot_state_sem
 ```
 export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:~/robot-simulation-v1.3/src/gazebo_sim_env
 export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:~/robot-simulation-v1.3/install/gazebo_sim_env/lib
+source ~/.bashrc
 ```
 
 4. build the workspace
