@@ -33,5 +33,5 @@ source ~/.bashrc
 4. build the workspace
 ```
 cd ~/robot-simulation-v1.3
-colcon build
+colcon build --ament-cmake-args -DEND_EFFECTOR=true
 ```
