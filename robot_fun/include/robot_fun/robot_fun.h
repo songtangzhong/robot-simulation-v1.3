@@ -20,9 +20,11 @@ public:
     void get_arm_joint_velocities(double * velocities);
     void get_arm_joint_efforts(double * efforts);
 
+#ifdef USE_END_EFFECTOR
     void get_end_eff_joint_positions(double * positions);
     void get_end_eff_joint_velocities(double * velocities);
     void get_end_eff_joint_efforts(double * efforts);
+#endif
 
 private:
     rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr robot_state_sub_;

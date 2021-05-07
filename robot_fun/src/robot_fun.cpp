@@ -45,7 +45,8 @@ void RobotFun::callback_robot_state_sub_(const sensor_msgs::msg::JointState::Sha
                 goto next_loop;
             }
         }
-        
+
+#ifdef USE_END_EFFECTOR
         for (unsigned int i=0; i< robot_->end_eff_->dof_; i++)
         {
             if (msg->name[j] == robot_->end_eff_->joint_names_[i])
@@ -57,6 +58,7 @@ void RobotFun::callback_robot_state_sub_(const sensor_msgs::msg::JointState::Sha
                 goto next_loop;
             }
         }
+#endif
 
         next_loop:
             k++;
@@ -94,6 +96,7 @@ void RobotFun::get_arm_joint_efforts(double * efforts)
     sem_common::semaphore_v(robot_state_sem_id_);
 }
 
+#ifdef USE_END_EFFECTOR
 void RobotFun::get_end_eff_joint_positions(double * positions)
 {
     sem_common::semaphore_p(robot_state_sem_id_);
@@ -123,5 +126,6 @@ void RobotFun::get_end_eff_joint_efforts(double * efforts)
     }
     sem_common::semaphore_v(robot_state_sem_id_);
 }
+#endif
 
 }
