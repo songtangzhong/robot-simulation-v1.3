@@ -67,3 +67,5 @@ ros2 run robot_hw_interface test_swtich_controller position_controllers velocity
 ```
 
 9. More APIs to directly operate robot are in package "robot_fun".
+
+10. Detailed illustration will be added in the future.
