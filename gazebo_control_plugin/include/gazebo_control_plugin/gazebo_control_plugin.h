@@ -34,7 +34,8 @@ private:
 
     gazebo::event::ConnectionPtr update_connection_;
 
-    std::shared_ptr<robot_info::RobotInfo> robot_ = std::make_shared<robot_info::RobotInfo>();
+    std::shared_ptr<robot_info::RobotInfo> robot_ = 
+        std::make_shared<robot_info::RobotInfo>();
 
     arm_shm::ArmShm *arm_shm_;
     int arm_shm_id_;
