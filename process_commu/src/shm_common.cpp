@@ -1,6 +1,8 @@
 #include <process_commu/shm_common.h>
 #include <process_commu/arm_shm.h>
+#ifdef USE_END_EFFECTOR
 #include <process_commu/end_eff_shm.h>
+#endif
 #include <process_commu/robot_state_shm.h>
 #include <rclcpp/rclcpp.hpp>
 
@@ -59,8 +61,10 @@ int release_shm(int shm_id, T ** shm_ptr)
 template int create_shm<arm_shm::ArmShm>(key_t key, arm_shm::ArmShm ** shm_ptr);
 template int release_shm<arm_shm::ArmShm>(int shm_id, arm_shm::ArmShm ** shm_ptr);
 
+#ifdef USE_END_EFFECTOR
 template int create_shm<end_eff_shm::EndEffShm>(key_t key, end_eff_shm::EndEffShm ** shm_ptr);
 template int release_shm<end_eff_shm::EndEffShm>(int shm_id, end_eff_shm::EndEffShm ** shm_ptr);
+#endif
 
 template int create_shm<robot_state_shm::RobotStateShm>(key_t key, robot_state_shm::RobotStateShm ** shm_ptr);
 template int release_shm<robot_state_shm::RobotStateShm>(int shm_id, robot_state_shm::RobotStateShm ** shm_ptr);

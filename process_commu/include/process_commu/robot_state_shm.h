@@ -11,9 +11,11 @@ typedef struct
     double cur_arm_velocities_[ARM_DOF];
     double cur_arm_efforts_[ARM_DOF];
 
+#ifdef USE_END_EFFECTOR
     double cur_end_eff_positions_[END_EFF_DOF];
     double cur_end_eff_velocities_[END_EFF_DOF];
     double cur_end_eff_efforts_[END_EFF_DOF];
+#endif
 } RobotStateShm;
 
 }
