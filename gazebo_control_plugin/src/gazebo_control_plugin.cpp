@@ -46,6 +46,7 @@ ControlPlugin::ControlPlugin()
             "Create arm semaphore failed.");
     }
 
+#ifdef USE_END_EFFECTOR
     ///////////////////////////////////////////////////////////////////////////////////////////
     end_eff_shm_id_ = shm_common::create_shm(robot_->end_eff_->shm_key_, &end_eff_shm_);
     if (end_eff_shm_id_ != SHM_STATE_NO)
@@ -83,6 +84,7 @@ ControlPlugin::ControlPlugin()
         RCLCPP_ERROR(rclcpp::get_logger("gazebo"), 
             "Create end-effector semaphore failed.");
     }
+#endif
 
     ///////////////////////////////////////////////////////////////////////////////////////////
     robot_state_shm_id_ = shm_common::create_shm(robot_->state_shm_key_, &robot_state_shm_);
@@ -103,14 +105,14 @@ ControlPlugin::ControlPlugin()
         robot_state_shm_->cur_arm_velocities_[j] = robot_->arm_->cur_velocities_[j];
         robot_state_shm_->cur_arm_efforts_[j] = robot_->arm_->cur_efforts_[j];
     }
-
+#ifdef USE_END_EFFECTOR
     for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
     {
         robot_state_shm_->cur_end_eff_positions_[j] = robot_->end_eff_->cur_positions_[j];
         robot_state_shm_->cur_end_eff_velocities_[j] = robot_->end_eff_->cur_velocities_[j];
         robot_state_shm_->cur_end_eff_efforts_[j] = robot_->end_eff_->cur_efforts_[j];
     }
-
+#endif
     robot_state_sem_id_ = sem_common::create_semaphore(robot_->state_sem_key_);
     if (robot_state_sem_id_ != SEM_STATE_NO)
     {
@@ -149,6 +151,7 @@ ControlPlugin::~ControlPlugin()
             "Delete arm semaphore failed.");
     }
 
+#ifdef USE_END_EFFECTOR
     ////////////////////////////////////////////////////////////////////////////////////
     if (shm_common::release_shm(end_eff_shm_id_, &end_eff_shm_) == SHM_STATE_OK)
     {
@@ -171,6 +174,7 @@ ControlPlugin::~ControlPlugin()
         RCLCPP_ERROR(rclcpp::get_logger("gazebo"), 
             "Delete end-effector semaphore failed.");
     }
+#endif
 
     ////////////////////////////////////////////////////////////////////////////////////
     if (shm_common::release_shm(robot_state_shm_id_, &robot_state_shm_) == SHM_STATE_OK)
@@ -216,11 +220,13 @@ void ControlPlugin::Load(gazebo::physics::ModelPtr parent, sdf::ElementPtr sdf)
      arm_joints_.push_back(arm_joint);
   }
 
+#ifdef USE_END_EFFECTOR
   for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
   {
      gazebo::physics::JointPtr end_eff_joint = parent_model_->GetJoint(robot_->end_eff_->joint_names_[j]);
      end_eff_joints_.push_back(end_eff_joint);
   }
+#endif
 
   update_connection_ = gazebo::event::Events::ConnectWorldUpdateBegin(
     boost::bind(&ControlPlugin::Update, this));
@@ -258,6 +264,7 @@ void ControlPlugin::Update()
   }
   sem_common::semaphore_v(arm_sem_id_);
 
+#ifdef USE_END_EFFECTOR
   sem_common::semaphore_p(end_eff_sem_id_);
   for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
   {
@@ -279,6 +286,7 @@ void ControlPlugin::Update()
     end_eff_shm_->cur_efforts_[j] = robot_->end_eff_->cur_efforts_[j] = end_eff_joints_[j]->GetForce(0u);
   }
   sem_common::semaphore_v(end_eff_sem_id_);
+#endif
 }
 
 GZ_REGISTER_MODEL_PLUGIN(ControlPlugin)

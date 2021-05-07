@@ -8,7 +8,9 @@
 
 #include <robot_info/robot_info.h>
 #include <process_commu/arm_shm.h>
+#ifdef USE_END_EFFECTOR
 #include <process_commu/end_eff_shm.h>
+#endif
 #include <process_commu/robot_state_shm.h>
 #include <process_commu/shm_common.h>
 #include <process_commu/sem_common.h>
@@ -30,7 +32,9 @@ private:
 
     std::vector<gazebo::physics::JointPtr> arm_joints_;
 
+#ifdef USE_END_EFFECTOR
     std::vector<gazebo::physics::JointPtr> end_eff_joints_;
+#endif
 
     gazebo::event::ConnectionPtr update_connection_;
 
@@ -41,9 +45,11 @@ private:
     int arm_shm_id_;
     int arm_sem_id_;
 
+#ifdef USE_END_EFFECTOR
     end_eff_shm::EndEffShm *end_eff_shm_;
     int end_eff_shm_id_;
     int end_eff_sem_id_;
+#endif
 
     robot_state_shm::RobotStateShm *robot_state_shm_;
     int robot_state_shm_id_;

@@ -1,7 +1,9 @@
 #include <process_commu/shm_common.h>
 #include <process_commu/sem_common.h>
 #include <process_commu/arm_shm.h>
+#ifdef USE_END_EFFECTOR
 #include <process_commu/end_eff_shm.h>
+#endif
 #include <robot_info/robot_info.h>
 #include <rclcpp/rclcpp.hpp>
 #include <iostream>
@@ -43,6 +45,7 @@ int main(int argc, char * argv[])
         return 0;
     }
 
+#ifdef USE_END_EFFECTOR
     ///////////////////////////////////////////////////////////////////////////////////////////////
     end_eff_shm::EndEffShm *end_eff_shm;
     int end_eff_shm_id;
@@ -73,6 +76,7 @@ int main(int argc, char * argv[])
             "Create end-effector semaphore failed.");
         return 0;
     }
+#endif
 
     rclcpp::WallRate loop_rate(1000);
     while (rclcpp::ok())
@@ -103,7 +107,9 @@ int main(int argc, char * argv[])
         sem_common::semaphore_v(arm_sem_id);
         std::cout << "-----------------------------" << std::endl;
 
+#ifdef USE_END_EFFECTOR
         /////////////////////////////////////////////////////////////////////////////////////////
+        sem_common::semaphore_p(end_eff_sem_id);
         for (unsigned int j=0; j< robot->end_eff_->dof_; j++)
         {
             robot->end_eff_->cur_positions_[j] = end_eff_shm->cur_positions_[j];
@@ -126,7 +132,10 @@ int main(int argc, char * argv[])
         
             std::cout << "robot->end_eff_->control_modes_[" << j << "]: " << robot->end_eff_->control_modes_[j] << std::endl;
         }
+        sem_common::semaphore_v(end_eff_sem_id);
         std::cout << "------------------------------------------------------" << std::endl;
+#endif
+
         loop_rate.sleep();
     }
 

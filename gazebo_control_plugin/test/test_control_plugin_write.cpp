@@ -1,7 +1,9 @@
 #include <process_commu/shm_common.h>
 #include <process_commu/sem_common.h>
 #include <process_commu/arm_shm.h>
+#ifdef USE_END_EFFECTOR
 #include <process_commu/end_eff_shm.h>
+#endif
 #include <robot_info/robot_info.h>
 #include <rclcpp/rclcpp.hpp>
 #include <iostream>
@@ -66,6 +68,7 @@ int main(int argc, char * argv[])
         }
     }
 
+#ifdef USE_END_EFFECTOR
     ///////////////////////////////////////////////////////////////////////////////////////////////
     end_eff_shm::EndEffShm *end_eff_shm;
     int end_eff_shm_id;
@@ -118,6 +121,7 @@ int main(int argc, char * argv[])
             break;
         }
     }
+#endif
 
     rclcpp::shutdown();
     return 0;
