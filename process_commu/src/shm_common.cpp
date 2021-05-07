@@ -18,14 +18,16 @@ int create_shm(key_t key, T ** shm_ptr)
     shm_id = shmget(key, sizeof(T), IPC_CREAT | 0666);
     if (shm_id == -1)
     {
-        RCLCPP_ERROR(rclcpp::get_logger("shm_common"), "Create shared memory failed.");
+        RCLCPP_ERROR(rclcpp::get_logger("shm_common"), 
+            "Create shared memory failed.");
 		return SHM_STATE_NO;
     }
 
     shm_ln_ptr = shmat(shm_id, 0, 0);
     if (shm_ln_ptr == (void*)-1)
     {
-        RCLCPP_ERROR(rclcpp::get_logger("shm_common"), "Create link address failed.");
+        RCLCPP_ERROR(rclcpp::get_logger("shm_common"), 
+            "Create link address failed.");
 		return SHM_STATE_NO;
     }
 
@@ -39,13 +41,15 @@ int release_shm(int shm_id, T ** shm_ptr)
 {
     if (shmdt(*shm_ptr) == -1)
     {
-        RCLCPP_ERROR(rclcpp::get_logger("shm_common"), "Seperate shared memory failed.");
+        RCLCPP_ERROR(rclcpp::get_logger("shm_common"), 
+            "Seperate shared memory failed.");
 		return SHM_STATE_NO;
     }
 
     if (shmctl(shm_id, IPC_RMID, 0) == -1)
     {
-        RCLCPP_ERROR(rclcpp::get_logger("shm_common"), "Release shared memory failed.");
+        RCLCPP_ERROR(rclcpp::get_logger("shm_common"), 
+            "Release shared memory failed.");
 		return SHM_STATE_NO;
     }
 

@@ -4,6 +4,8 @@
 #include <rclcpp/rclcpp.hpp>
 #include <iostream>
 
+#define filepath "/dev/test_shm"
+
 int main(int argc, char * argv[])
 {
     rclcpp::init(argc, argv);
