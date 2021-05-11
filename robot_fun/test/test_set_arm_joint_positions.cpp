@@ -13,7 +13,7 @@ int main(int argc, char ** argv)
     std::vector<double> cur_arm_positions_1;
     std::vector<double> cur_arm_positions_2;
     cur_arm_positions_1.resize(ARM_DOF);
-    cur_arm_positions_2.resize(6);
+    cur_arm_positions_2.resize(7);
 
     while (rclcpp::ok())
     {
