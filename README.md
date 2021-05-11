@@ -1,4 +1,5 @@
 # robot-simulation-v1.3
+The project is based on ros2-foxy and gazebo-11.
 
 ## Usage:
 1. Clone the project.
