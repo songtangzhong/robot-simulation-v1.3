@@ -7,7 +7,7 @@ int main(int argc, char ** argv)
     rclcpp::init(argc, argv);
 
     std::shared_ptr<robot_fun::RobotFun> robot = 
-        std::make_shared<robot_fun::RobotFun>("test");
+        std::make_shared<robot_fun::RobotFun>("test_robot_fun");
 
     std::vector<double> cur_arm_positions_1;
     std::vector<double> cur_arm_positions_2;
