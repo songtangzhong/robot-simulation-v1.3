@@ -10,8 +10,10 @@ int main(int argc, char ** argv)
         std::make_shared<robot_fun::RobotFun>("test_trigger");
 
     rclcpp::WallRate loop_rate(1);
-    double cur_arm_positions[ARM_DOF];
-    double cur_arm_velocities[ARM_DOF];
+    std::vector<double> cur_arm_positions;
+    cur_arm_positions.resize(ARM_DOF);
+    std::vector<double> cur_arm_velocities;
+    cur_arm_velocities.resize(ARM_DOF);
     double cur_arm_efforts[ARM_DOF];
 
     while (rclcpp::ok())

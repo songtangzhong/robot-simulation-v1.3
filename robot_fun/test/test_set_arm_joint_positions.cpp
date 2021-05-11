@@ -9,19 +9,18 @@ int main(int argc, char ** argv)
     std::shared_ptr<robot_fun::RobotFun> robot = 
         std::make_shared<robot_fun::RobotFun>("test");
 
-    double cur_arm_positions[ARM_DOF];
     std::vector<double> cur_arm_positions_1;
     std::vector<double> cur_arm_positions_2;
     cur_arm_positions_1.resize(ARM_DOF);
-    cur_arm_positions_2.resize(7);
+    cur_arm_positions_2.resize(ARM_DOF);
 
     while (rclcpp::ok())
     {
-        robot->get_arm_joint_positions(cur_arm_positions);
+        robot->get_arm_joint_positions(cur_arm_positions_1);
         for (unsigned int j=0; j< ARM_DOF; j++)
         {
-            cur_arm_positions_1[j] = cur_arm_positions[j]+0.5;
-            cur_arm_positions_2[j] = cur_arm_positions[j]+1;
+            cur_arm_positions_1[j] = cur_arm_positions_1[j]+0.5;
+            cur_arm_positions_2[j] = cur_arm_positions_1[j]+0.5;
         }
 
         robot->set_arm_joint_positions(cur_arm_positions_1);

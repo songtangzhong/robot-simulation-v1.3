@@ -17,8 +17,8 @@ public:
     RobotFun(const std::string & node_name);
     ~RobotFun();
 
-    void get_arm_joint_positions(double * positions);
-    void get_arm_joint_velocities(double * velocities);
+    void get_arm_joint_positions(std::vector<double> & positions);
+    void get_arm_joint_velocities(std::vector<double> & velocities);
     void get_arm_joint_efforts(double * efforts);
 
     int set_arm_joint_positions(std::vector<double> & positions);
