@@ -25,6 +25,7 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(robot_info REQUIRED)
 find_package(process_commu REQUIRED)
+find_package(std_msgs REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
   src/robot_fun.cpp
@@ -44,6 +45,7 @@ ament_target_dependencies(${PROJECT_NAME}
   sensor_msgs
   robot_info
   process_commu
+  std_msgs
 )
 
 add_executable(trigger_state_sub
@@ -80,6 +82,27 @@ install(DIRECTORY include/
   DESTINATION include
 )
 
+add_executable(test_set_arm_joint_positions
+  test/test_set_arm_joint_positions.cpp
+)
+target_include_directories(test_set_arm_joint_positions
+  PRIVATE
+  include
+  ${robot_info_INCLUDE_DIRS}
+)
+target_link_libraries(test_set_arm_joint_positions
+  ${PROJECT_NAME}
+)
+ament_target_dependencies(test_set_arm_joint_positions
+  rclcpp
+  robot_info
+  std_msgs
+)
+
+install(DIRECTORY include/
+  DESTINATION include
+)
+
 install(
   TARGETS 
   ${PROJECT_NAME}
@@ -91,6 +114,7 @@ install(
 install(TARGETS
   trigger_state_sub
   test_trigger
+  test_set_arm_joint_positions
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -107,6 +131,7 @@ ament_export_dependencies(
   sensor_msgs
   robot_info
   process_commu
+  std_msgs
 )
 
 ament_package()
