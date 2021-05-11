@@ -123,6 +123,46 @@ int RobotFun::set_arm_joint_positions(std::vector<double> & positions)
     return 0;
 }
 
+int RobotFun::set_arm_joint_velocities(std::vector<double> & velocities)
+{
+    if (velocities.size() != robot_->arm_->dof_)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("RobotFun"), 
+        "Failed to set arm joint velocities, size error.");
+
+        return -1;
+    }
+
+    auto cmd = std_msgs::msg::Float64MultiArray();
+    for (unsigned int j=0; j< robot_->arm_->dof_; j++)
+    {
+        cmd.data.push_back(velocities[j]);
+    }
+    cmd_velocities_pub_->publish(cmd);
+
+    return 0;
+}
+
+int RobotFun::set_arm_joint_efforts(std::vector<double> & efforts)
+{
+    if (efforts.size() != robot_->arm_->dof_)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("RobotFun"), 
+        "Failed to set arm joint efforts, size error.");
+
+        return -1;
+    }
+
+    auto cmd = std_msgs::msg::Float64MultiArray();
+    for (unsigned int j=0; j< robot_->arm_->dof_; j++)
+    {
+        cmd.data.push_back(efforts[j]);
+    }
+    cmd_efforts_pub_->publish(cmd);
+
+    return 0;
+}
+
 #ifdef USE_END_EFFECTOR
 void RobotFun::get_end_eff_joint_positions(double * positions)
 {
