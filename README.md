@@ -24,8 +24,8 @@ touch ~/robot_files/robot_end_effector_shm
 touch ~/robot_files/robot_end_effector_sem
 touch ~/robot_files/robot_state_shm
 touch ~/robot_files/robot_state_sem
-```
 Modify file robot_info/include/robot_info/robot_macro.h.
+```
 
 3. Add following commands to you ~/.bashrc.
 ```
