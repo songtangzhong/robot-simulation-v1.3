@@ -137,7 +137,8 @@ void ControllerConfigure::switch_controller(const std::string & start_controller
         {
             // Set current arm joint positions to commands by ros2 controller manager,
             // not by shared memory.
-            double cur_arm_positions[ARM_DOF];
+            std::vector<double> cur_arm_positions;
+            cur_arm_positions.resize(ARM_DOF);
             robot_fun_->get_arm_joint_positions(cur_arm_positions);
             auto cmd = std_msgs::msg::Float64MultiArray();
             for (unsigned int j=0; j< robot_->arm_->dof_; j++)
@@ -151,7 +152,8 @@ void ControllerConfigure::switch_controller(const std::string & start_controller
         {
             // Set current arm joint velocities (zeros) to commands by ros2 controller manager,
             // not by shared memory.
-            double cur_arm_velocities[ARM_DOF];
+            std::vector<double> cur_arm_velocities;
+            cur_arm_velocities.resize(ARM_DOF);
             auto cmd = std_msgs::msg::Float64MultiArray();
             for (unsigned int j=0; j< robot_->arm_->dof_; j++)
             {
