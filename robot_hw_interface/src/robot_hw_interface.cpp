@@ -138,13 +138,13 @@ hardware_interface::return_type RobotHardware::start()
     rclcpp::get_logger("RobotHardware"),
     "Starting ...please wait...");
 
-  for (int i = 0; i <= start_duration_sec_; i++) 
+  /*for (int i = 0; i <= start_duration_sec_; i++) 
   {
     rclcpp::sleep_for(std::chrono::seconds(1));
     RCLCPP_INFO(
       rclcpp::get_logger("RobotHardware"),
       "%.1f seconds left...", start_duration_sec_ - i);
-  }
+  }*/
 
   status_ = hardware_interface::status::STARTED;
 
@@ -161,12 +161,12 @@ hardware_interface::return_type RobotHardware::stop()
     rclcpp::get_logger("RobotHardware"),
     "Stopping ...please wait...");
 
-  for (int i = 0; i <= stop_duration_sec_; i++) {
+  /*for (int i = 0; i <= stop_duration_sec_; i++) {
     rclcpp::sleep_for(std::chrono::seconds(1));
     RCLCPP_INFO(
       rclcpp::get_logger("RobotHardware"),
       "%.1f seconds left...", stop_duration_sec_ - i);
-  }
+  }*/
 
   status_ = hardware_interface::status::STOPPED;
 
