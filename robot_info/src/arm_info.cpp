@@ -33,7 +33,7 @@ ArmInfo::ArmInfo()
         control_modes_[j] = position_mode_; // default: position mode
     }
     cur_positions_[3] = cmd_positions_[3] =  -1.5;
-    cur_positions_[3] = cmd_positions_[5] = 1.88;
+    cur_positions_[5] = cmd_positions_[5] = 1.88;
 
     shm_key_ = ftok(ARM_SHM_FILE, 1);
     if (shm_key_ == -1)
