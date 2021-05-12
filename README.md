@@ -14,17 +14,15 @@ cd ..
 rm -rf robot-simulation-v1.3
 ```
 
-2. Create following files in you ~/ folder.
+2. Create following files in you /usr/local folder.
 ```
-cd ~/
-mkdir robot_files
-touch ~/robot_files/robot_arm_shm
-touch ~/robot_files/robot_arm_sem
-touch ~/robot_files/robot_end_effector_shm
-touch ~/robot_files/robot_end_effector_sem
-touch ~/robot_files/robot_state_shm
-touch ~/robot_files/robot_state_sem
-Modify file robot_info/include/robot_info/robot_macro.h.
+sudo mkdir /usr/local/robot_files
+sudo touch /usr/local/robot_files/robot_arm_shm
+sudo touch /usr/local/robot_files/robot_arm_sem
+sudo touch /usr/local/robot_files/robot_end_effector_shm
+sudo touch /usr/local/robot_files/robot_end_effector_sem
+sudo touch /usr/local/robot_files/robot_state_shm
+sudo touch /usr/local/robot_files/robot_state_sem
 ```
 
 3. Add following commands to you ~/.bashrc.
