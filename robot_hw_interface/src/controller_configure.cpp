@@ -167,7 +167,8 @@ void ControllerConfigure::switch_controller(const std::string & start_controller
         {
             // Set current arm joint efforts (zeros) to commands by ros2 controller manager,
             // not by shared memory.
-            double cur_arm_efforts[ARM_DOF];
+            std::vector<double> cur_arm_efforts;
+            cur_arm_efforts.resize(ARM_DOF);
             auto cmd = std_msgs::msg::Float64MultiArray();
             for (unsigned int j=0; j< robot_->arm_->dof_; j++)
             {
