@@ -11,10 +11,11 @@ int main(int argc, char ** argv)
 
     rclcpp::WallRate loop_rate(1);
     std::vector<double> cur_arm_positions;
-    cur_arm_positions.resize(ARM_DOF);
     std::vector<double> cur_arm_velocities;
+    std::vector<double> cur_arm_efforts;
+    cur_arm_positions.resize(ARM_DOF);
     cur_arm_velocities.resize(ARM_DOF);
-    double cur_arm_efforts[ARM_DOF];
+    cur_arm_efforts.resize(ARM_DOF);
 
     while (rclcpp::ok())
     {

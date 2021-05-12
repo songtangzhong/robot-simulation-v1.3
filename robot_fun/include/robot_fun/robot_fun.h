@@ -19,16 +19,16 @@ public:
 
     void get_arm_joint_positions(std::vector<double> & positions);
     void get_arm_joint_velocities(std::vector<double> & velocities);
-    void get_arm_joint_efforts(double * efforts);
+    void get_arm_joint_efforts(std::vector<double> & efforts);
 
     int set_arm_joint_positions(std::vector<double> & positions);
     int set_arm_joint_velocities(std::vector<double> & velocities);
     int set_arm_joint_efforts(std::vector<double> & efforts);
 
 #ifdef USE_END_EFFECTOR
-    void get_end_eff_joint_positions(double * positions);
-    void get_end_eff_joint_velocities(double * velocities);
-    void get_end_eff_joint_efforts(double * efforts);
+    void get_end_eff_joint_positions(std::vector<double> & positions);
+    void get_end_eff_joint_velocities(std::vector<double> & velocities);
+    void get_end_eff_joint_efforts(std::vector<double> & efforts);
 #endif
 
 private:

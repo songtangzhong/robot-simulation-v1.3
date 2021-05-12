@@ -93,12 +93,12 @@ void RobotFun::get_arm_joint_velocities(std::vector<double> & velocities)
     sem_common::semaphore_v(robot_state_sem_id_);
 }
 
-void RobotFun::get_arm_joint_efforts(double * efforts)
+void RobotFun::get_arm_joint_efforts(std::vector<double> & efforts)
 {
     sem_common::semaphore_p(robot_state_sem_id_);
     for (unsigned int j=0; j< robot_->arm_->dof_; j++)
     {
-        *(efforts+j) = robot_state_shm_->cur_arm_efforts_[j];
+        efforts[j] = robot_state_shm_->cur_arm_efforts_[j];
     }
     sem_common::semaphore_v(robot_state_sem_id_);
 }
@@ -164,32 +164,32 @@ int RobotFun::set_arm_joint_efforts(std::vector<double> & efforts)
 }
 
 #ifdef USE_END_EFFECTOR
-void RobotFun::get_end_eff_joint_positions(double * positions)
+void RobotFun::get_end_eff_joint_positions(std::vector<double> & positions)
 {
     sem_common::semaphore_p(robot_state_sem_id_);
     for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
     {
-        *(positions+j) = robot_state_shm_->cur_end_eff_positions_[j];
+        positions[j] = robot_state_shm_->cur_end_eff_positions_[j];
     }
     sem_common::semaphore_v(robot_state_sem_id_);
 }
 
-void RobotFun::get_end_eff_joint_velocities(double * velocities)
+void RobotFun::get_end_eff_joint_velocities(std::vector<double> & velocities)
 {
     sem_common::semaphore_p(robot_state_sem_id_);
     for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
     {
-        *(velocities+j) = robot_state_shm_->cur_end_eff_velocities_[j];
+        velocities[j] = robot_state_shm_->cur_end_eff_velocities_[j];
     }
     sem_common::semaphore_v(robot_state_sem_id_);
 }
 
-void RobotFun::get_end_eff_joint_efforts(double * efforts)
+void RobotFun::get_end_eff_joint_efforts(std::vector<double> & efforts)
 {
     sem_common::semaphore_p(robot_state_sem_id_);
     for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
     {
-        *(efforts+j) = robot_state_shm_->cur_end_eff_efforts_[j];
+        efforts[j] = robot_state_shm_->cur_end_eff_efforts_[j];
     }
     sem_common::semaphore_v(robot_state_sem_id_);
 }
