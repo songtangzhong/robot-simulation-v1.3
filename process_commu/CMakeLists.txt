@@ -58,12 +58,15 @@ add_executable(test_shm_common
 target_include_directories(test_shm_common 
   PRIVATE 
   include
+  ${robot_info_INCLUDE_DIRS}
 )
 target_link_libraries(test_shm_common 
   ${PROJECT_NAME}
+  ${robot_info_LIBRARIES}
 )
 ament_target_dependencies(test_shm_common
   rclcpp
+  robot_info
 )
 
 install(DIRECTORY include/

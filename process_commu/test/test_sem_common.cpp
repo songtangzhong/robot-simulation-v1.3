@@ -8,21 +8,25 @@ int main(int argc, char * argv[])
     int sem_id = sem_common::create_semaphore(1234);
     if (sem_id != SEM_STATE_NO)
     {
-        RCLCPP_INFO(rclcpp::get_logger("test"), "Create semaphore successfully.");
+        RCLCPP_INFO(rclcpp::get_logger("test"), 
+            "Create semaphore successfully.");
     }
     else
     {
-        RCLCPP_ERROR(rclcpp::get_logger("test"), "Create semaphore failed.");
+        RCLCPP_ERROR(rclcpp::get_logger("test"), 
+            "Create semaphore failed.");
         return 0;
     }
 
     if (sem_common::semaphore_p(sem_id) == SEM_STATE_OK)
     {
-        RCLCPP_INFO(rclcpp::get_logger("test"), "Get semaphore successfully.");
+        RCLCPP_INFO(rclcpp::get_logger("test"), 
+            "Get semaphore successfully.");
     }
     else
     {
-        RCLCPP_ERROR(rclcpp::get_logger("test"), "Get semaphore failed.");
+        RCLCPP_ERROR(rclcpp::get_logger("test"), 
+            "Get semaphore failed.");
         return 0;
     }
 
@@ -30,21 +34,25 @@ int main(int argc, char * argv[])
 
     if (sem_common::semaphore_v(sem_id) == SEM_STATE_OK)
     {
-        RCLCPP_INFO(rclcpp::get_logger("test"), "Release semaphore successfully.");
+        RCLCPP_INFO(rclcpp::get_logger("test"), 
+            "Release semaphore successfully.");
     }
     else
     {
-        RCLCPP_ERROR(rclcpp::get_logger("test"), "Release semaphore failed.");
+        RCLCPP_ERROR(rclcpp::get_logger("test"), 
+            "Release semaphore failed.");
         return 0;
     }
 
     if (sem_common::delete_semaphore(sem_id) == SEM_STATE_OK)
     {
-        RCLCPP_INFO(rclcpp::get_logger("test"), "Delete semaphore successfully.");
+        RCLCPP_INFO(rclcpp::get_logger("test"), 
+            "Delete semaphore successfully.");
     }
     else
     {
-        RCLCPP_ERROR(rclcpp::get_logger("test"), "Delete semaphore failed.");
+        RCLCPP_ERROR(rclcpp::get_logger("test"), 
+            "Delete semaphore failed.");
         return 0;
     }
     
