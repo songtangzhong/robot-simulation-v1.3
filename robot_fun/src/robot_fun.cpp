@@ -32,6 +32,21 @@ RobotFun::RobotFun(const std::string & node_name)
             "Create robot state semaphore failed.");
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    arm_shm_id_ = shm_common::create_shm(robot_->arm_->shm_key_, &arm_shm_);
+    if (arm_shm_id_ == SHM_STATE_NO)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("RobotHardware"), 
+            "Create arm shared memory failed.");
+    }
+
+    arm_sem_id_ = sem_common::create_semaphore(robot_->arm_->sem_key_);
+    if (arm_sem_id_ == SEM_STATE_NO)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("RobotHardware"), 
+            "Create arm semaphore failed.");
+    }
+
 #ifdef USE_END_EFFECTOR
   ///////////////////////////////////////////////////////////////////////////////////////////
   end_eff_shm_id_ = shm_common::create_shm(robot_->end_eff_->shm_key_, &end_eff_shm_);
@@ -180,6 +195,28 @@ int RobotFun::set_arm_joint_efforts(std::vector<double> & efforts)
     return 0;
 }
 
+std::string RobotFun::get_arm_control_mode(void)
+{
+    std::string control_mode;
+
+    sem_common::semaphore_p(arm_sem_id_);
+    if (arm_shm_->control_modes_[0] & robot_->arm_->position_mode_)
+    {
+        control_mode = "position_mode";
+    }
+    else if (arm_shm_->control_modes_[0] & robot_->arm_->velocity_mode_)
+    {
+        control_mode = "velocity_mode";
+    }
+    else if (arm_shm_->control_modes_[0] & robot_->arm_->effort_mode_)
+    {
+        control_mode = "effort_mode";
+    }
+    sem_common::semaphore_v(arm_sem_id_);
+
+    return control_mode;
+}
+
 #ifdef USE_END_EFFECTOR
 void RobotFun::get_end_eff_joint_positions(std::vector<double> & positions)
 {
@@ -272,6 +309,28 @@ int RobotFun::set_end_eff_joint_efforts(std::vector<double> & efforts)
     sem_common::semaphore_v(end_eff_sem_id_);
 
     return 0;
+}
+
+std::string RobotFun::get_end_eff_control_mode(void)
+{
+    std::string control_mode;
+
+    sem_common::semaphore_p(end_eff_sem_id_);
+    if (end_eff_shm_->control_modes_[0] & robot_->end_eff_->position_mode_)
+    {
+        control_mode = "position_mode";
+    }
+    else if (end_eff_shm_->control_modes_[0] & robot_->end_eff_->velocity_mode_)
+    {
+        control_mode = "velocity_mode";
+    }
+    else if (end_eff_shm_->control_modes_[0] & robot_->end_eff_->effort_mode_)
+    {
+        control_mode = "effort_mode";
+    }
+    sem_common::semaphore_v(end_eff_sem_id_);
+
+    return control_mode;
 }
 #endif
 

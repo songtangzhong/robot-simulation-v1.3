@@ -5,6 +5,7 @@
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <robot_info/robot_info.h>
 #include <process_commu/robot_state_shm.h>
+#include <process_commu/arm_shm.h>
 #include <process_commu/shm_common.h>
 #include <process_commu/sem_common.h>
 #include <std_msgs/msg/float64_multi_array.hpp>
@@ -29,6 +30,8 @@ public:
     int set_arm_joint_velocities(std::vector<double> & velocities);
     int set_arm_joint_efforts(std::vector<double> & efforts);
 
+    std::string get_arm_control_mode(void);
+
 #ifdef USE_END_EFFECTOR
     void get_end_eff_joint_positions(std::vector<double> & positions);
     void get_end_eff_joint_velocities(std::vector<double> & velocities);
@@ -37,6 +40,8 @@ public:
     int set_end_eff_joint_positions(std::vector<double> & positions);
     int set_end_eff_joint_velocities(std::vector<double> & velocities);
     int set_end_eff_joint_efforts(std::vector<double> & efforts);
+
+    std::string get_end_eff_control_mode(void);
 #endif
 
 private:
@@ -54,6 +59,10 @@ private:
     robot_state_shm::RobotStateShm *robot_state_shm_;
     int robot_state_shm_id_;
     int robot_state_sem_id_;
+
+    arm_shm::ArmShm *arm_shm_;
+    int arm_shm_id_;
+    int arm_sem_id_;
 
 #ifdef USE_END_EFFECTOR
     end_eff_shm::EndEffShm *end_eff_shm_;

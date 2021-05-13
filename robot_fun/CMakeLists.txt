@@ -95,6 +95,20 @@ ament_target_dependencies(test_set_arm_joint_positions
   std_msgs
 )
 
+add_executable(test_get_arm_control_mode
+  test/test_get_arm_control_mode.cpp
+)
+target_include_directories(test_get_arm_control_mode
+  PRIVATE
+  include
+)
+target_link_libraries(test_get_arm_control_mode
+  ${PROJECT_NAME}
+)
+ament_target_dependencies(test_get_arm_control_mode
+  rclcpp
+)
+
 install(DIRECTORY include/
   DESTINATION include
 )
@@ -111,6 +125,7 @@ install(TARGETS
   trigger_state_sub
   test_trigger
   test_set_arm_joint_positions
+  test_get_arm_control_mode
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
