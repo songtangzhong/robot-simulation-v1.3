@@ -43,9 +43,6 @@ public:
   hardware_interface::return_type write() override;
 
 private:
-  double start_duration_sec_;
-  double stop_duration_sec_;
-
   std::shared_ptr<robot_info::RobotInfo> robot_ = 
         std::make_shared<robot_info::RobotInfo>();
 

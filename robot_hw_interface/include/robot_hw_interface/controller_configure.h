@@ -32,9 +32,12 @@ public:
 private:
     std::shared_ptr<rclcpp::Node> nh_;
 
-    rclcpp::Client<controller_manager_msgs::srv::LoadStartController>::SharedPtr load_start_controller_cli_;
-    rclcpp::Client<controller_manager_msgs::srv::LoadConfigureController>::SharedPtr load_configure_controller_cli_;
-    rclcpp::Client<controller_manager_msgs::srv::SwitchController>::SharedPtr switch_controller_cli_;
+    rclcpp::Client<controller_manager_msgs::srv::LoadStartController>::SharedPtr 
+        load_start_controller_cli_;
+    rclcpp::Client<controller_manager_msgs::srv::LoadConfigureController>::SharedPtr 
+        load_configure_controller_cli_;
+    rclcpp::Client<controller_manager_msgs::srv::SwitchController>::SharedPtr 
+        switch_controller_cli_;
 
     std::shared_ptr<robot_info::RobotInfo> robot_ = 
         std::make_shared<robot_info::RobotInfo>();

@@ -16,9 +16,6 @@ hardware_interface::return_type RobotHardware::configure(
     return hardware_interface::return_type::ERROR;
   }
 
-  start_duration_sec_ = stod(info_.hardware_parameters["start_duration_sec"]);
-  stop_duration_sec_ = stod(info_.hardware_parameters["stop_duration_sec"]);
-
   ///////////////////////////////////////////////////////////////////////////////////////////
   arm_shm_id_ = shm_common::create_shm(robot_->arm_->shm_key_, &arm_shm_);
   if (arm_shm_id_ == SHM_STATE_NO)
@@ -138,14 +135,6 @@ hardware_interface::return_type RobotHardware::start()
     rclcpp::get_logger("RobotHardware"),
     "Starting ...please wait...");
 
-  /*for (int i = 0; i <= start_duration_sec_; i++) 
-  {
-    rclcpp::sleep_for(std::chrono::seconds(1));
-    RCLCPP_INFO(
-      rclcpp::get_logger("RobotHardware"),
-      "%.1f seconds left...", start_duration_sec_ - i);
-  }*/
-
   status_ = hardware_interface::status::STARTED;
 
   RCLCPP_INFO(
@@ -160,13 +149,6 @@ hardware_interface::return_type RobotHardware::stop()
   RCLCPP_INFO(
     rclcpp::get_logger("RobotHardware"),
     "Stopping ...please wait...");
-
-  /*for (int i = 0; i <= stop_duration_sec_; i++) {
-    rclcpp::sleep_for(std::chrono::seconds(1));
-    RCLCPP_INFO(
-      rclcpp::get_logger("RobotHardware"),
-      "%.1f seconds left...", stop_duration_sec_ - i);
-  }*/
 
   status_ = hardware_interface::status::STOPPED;
 

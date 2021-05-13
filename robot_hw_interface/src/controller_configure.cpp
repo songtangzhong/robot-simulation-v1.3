@@ -16,14 +16,14 @@ ControllerConfigure::ControllerConfigure(const std::string & node_name)
 {
     nh_ = std::make_shared<rclcpp::Node>(node_name);
 
-    load_start_controller_cli_ = 
-    nh_->create_client<controller_manager_msgs::srv::LoadStartController>("/controller_manager/load_and_start_controller");
+    load_start_controller_cli_ = nh_->create_client<controller_manager_msgs::srv::LoadStartController>
+        ("/controller_manager/load_and_start_controller");
 
-    load_configure_controller_cli_ = 
-    nh_->create_client<controller_manager_msgs::srv::LoadConfigureController>("/controller_manager/load_and_configure_controller");
+    load_configure_controller_cli_ = nh_->create_client<controller_manager_msgs::srv::LoadConfigureController>
+        ("/controller_manager/load_and_configure_controller");
 
-    switch_controller_cli_ = 
-    nh_->create_client<controller_manager_msgs::srv::SwitchController>("/controller_manager/switch_controller");
+    switch_controller_cli_ = nh_->create_client<controller_manager_msgs::srv::SwitchController>
+        ("/controller_manager/switch_controller");
 
     arm_shm_id_ = shm_common::create_shm(robot_->arm_->shm_key_, &arm_shm_);
     if (arm_shm_id_ == SHM_STATE_NO)
@@ -39,9 +39,12 @@ ControllerConfigure::ControllerConfigure(const std::string & node_name)
             "Create arm semaphore failed.");
     }
 
-    cmd_positions_pub_ = nh_->create_publisher<std_msgs::msg::Float64MultiArray>("/position_controllers/commands", 100);
-    cmd_velocities_pub_ = nh_->create_publisher<std_msgs::msg::Float64MultiArray>("/velocity_controllers/commands", 100);
-    cmd_efforts_pub_ = nh_->create_publisher<std_msgs::msg::Float64MultiArray>("/effort_controllers/commands", 100);
+    cmd_positions_pub_ = nh_->create_publisher<std_msgs::msg::Float64MultiArray>
+        ("/position_controllers/commands", 100);
+    cmd_velocities_pub_ = nh_->create_publisher<std_msgs::msg::Float64MultiArray>
+        ("/velocity_controllers/commands", 100);
+    cmd_efforts_pub_ = nh_->create_publisher<std_msgs::msg::Float64MultiArray>
+        ("/effort_controllers/commands", 100);
 }
 
 ControllerConfigure::~ControllerConfigure(){}
@@ -132,7 +135,6 @@ void ControllerConfigure::switch_controller(const std::string & start_controller
     // Wait for the result.
     if (rclcpp::spin_until_future_complete(nh_, result) == rclcpp::FutureReturnCode::SUCCESS)
     {
-        sem_common::semaphore_p(arm_sem_id_);
         if (start_controller == "position_controllers")
         {
             // Set current arm joint positions to commands by ros2 controller manager,
@@ -141,11 +143,13 @@ void ControllerConfigure::switch_controller(const std::string & start_controller
             cur_arm_positions.resize(ARM_DOF);
             robot_fun_->get_arm_joint_positions(cur_arm_positions);
             auto cmd = std_msgs::msg::Float64MultiArray();
+            sem_common::semaphore_p(arm_sem_id_);
             for (unsigned int j=0; j< robot_->arm_->dof_; j++)
             {
                 cmd.data.push_back(cur_arm_positions[j]);
                 arm_shm_->control_modes_[j] = robot_->arm_->position_mode_;
             }
+            sem_common::semaphore_v(arm_sem_id_);
             cmd_positions_pub_->publish(cmd);
         }
         else if (start_controller == "velocity_controllers")
@@ -155,12 +159,14 @@ void ControllerConfigure::switch_controller(const std::string & start_controller
             std::vector<double> cur_arm_velocities;
             cur_arm_velocities.resize(ARM_DOF);
             auto cmd = std_msgs::msg::Float64MultiArray();
+            sem_common::semaphore_p(arm_sem_id_);
             for (unsigned int j=0; j< robot_->arm_->dof_; j++)
             {
                 cur_arm_velocities[j] = 0;
                 cmd.data.push_back(cur_arm_velocities[j]);
                 arm_shm_->control_modes_[j] = robot_->arm_->velocity_mode_;
             }
+            sem_common::semaphore_v(arm_sem_id_);
             cmd_velocities_pub_->publish(cmd);
         }
         else if (start_controller == "effort_controllers")
@@ -170,15 +176,16 @@ void ControllerConfigure::switch_controller(const std::string & start_controller
             std::vector<double> cur_arm_efforts;
             cur_arm_efforts.resize(ARM_DOF);
             auto cmd = std_msgs::msg::Float64MultiArray();
+            sem_common::semaphore_p(arm_sem_id_);
             for (unsigned int j=0; j< robot_->arm_->dof_; j++)
             {
                 cur_arm_efforts[j] = 0;
                 cmd.data.push_back(cur_arm_efforts[j]);
                 arm_shm_->control_modes_[j] = robot_->arm_->effort_mode_;
             }
+            sem_common::semaphore_v(arm_sem_id_);
             cmd_efforts_pub_->publish(cmd);
         }
-        sem_common::semaphore_v(arm_sem_id_);
 
         RCLCPP_INFO(rclcpp::get_logger("switch_controller"), 
             "switch %s to %s successfully.", stop_controller.c_str(), start_controller.c_str());
