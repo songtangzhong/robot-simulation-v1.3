@@ -78,10 +78,6 @@ ament_target_dependencies(test_trigger
   robot_info
 )
 
-install(DIRECTORY include/
-  DESTINATION include
-)
-
 add_executable(test_set_arm_joint_positions
   test/test_set_arm_joint_positions.cpp
 )
