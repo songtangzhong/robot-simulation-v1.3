@@ -114,7 +114,7 @@ int main(int argc, char * argv[])
         }
         sem_common::semaphore_v(end_eff_sem_id);
         loop_rate.sleep();
-        if (i++ == 1000)
+        if (i++ == 400)
         {
             RCLCPP_INFO(rclcpp::get_logger("test"), 
                 "Execute end-effector control successfully.");

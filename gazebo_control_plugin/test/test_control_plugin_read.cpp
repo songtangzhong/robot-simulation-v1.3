@@ -84,25 +84,33 @@ int main(int argc, char * argv[])
         sem_common::semaphore_p(arm_sem_id);
         for (unsigned int j=0; j< robot->arm_->dof_; j++)
         {
-            robot->arm_->cur_positions_[j] = arm_shm->cur_positions_[j];
-            robot->arm_->cur_velocities_[j] = arm_shm->cur_velocities_[j];
-            robot->arm_->cur_efforts_[j] = arm_shm->cur_efforts_[j];
-
-            robot->arm_->cmd_positions_[j] = arm_shm->cmd_positions_[j];
-            robot->arm_->cmd_velocities_[j] = arm_shm->cmd_velocities_[j];
-            robot->arm_->cmd_efforts_[j] = arm_shm->cmd_efforts_[j];
-
-            robot->arm_->control_modes_[j] = arm_shm->control_modes_[j];
-
-            std::cout << "robot->arm_->cur_positions_[" << j << "]: " << robot->arm_->cur_positions_[j] << std::endl;
-            std::cout << "robot->arm_->cur_velocities_[" << j << "]: " << robot->arm_->cur_velocities_[j] << std::endl;
-            std::cout << "robot->arm_->cur_efforts_[" << j << "]: " << robot->arm_->cur_efforts_[j] << std::endl;
-        
-            std::cout << "robot->arm_->cmd_positions_[" << j << "]: " << robot->arm_->cmd_positions_[j] << std::endl;
-            std::cout << "robot->arm_->cmd_velocities_[" << j << "]: " << robot->arm_->cmd_velocities_[j] << std::endl;
-            std::cout << "robot->arm_->cmd_efforts_[" << j << "]: " << robot->arm_->cmd_efforts_[j] << std::endl;
-        
-            std::cout << "robot->arm_->control_modes_[" << j << "]: " << robot->arm_->control_modes_[j] << std::endl;
+            std::cout << "arm_shm->cur_positions_[" << j << "]: " 
+                << arm_shm->cur_positions_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->arm_->dof_; j++)
+        {
+            std::cout << "arm_shm->cur_velocities_[" << j << "]: " 
+                << arm_shm->cur_velocities_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->arm_->dof_; j++)
+        {
+            std::cout << "arm_shm->cur_efforts_[" << j << "]: " 
+                << arm_shm->cur_efforts_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->arm_->dof_; j++)
+        {
+            std::cout << "arm_shm->cmd_positions_[" << j << "]: " 
+                << arm_shm->cur_positions_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->arm_->dof_; j++)
+        {
+            std::cout << "arm_shm->cmd_velocities_[" << j << "]: " 
+                << arm_shm->cur_velocities_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->arm_->dof_; j++)
+        {
+            std::cout << "arm_shm->cmd_efforts_[" << j << "]: " 
+                << arm_shm->cur_efforts_[j] << std::endl;
         }
         sem_common::semaphore_v(arm_sem_id);
         std::cout << "-----------------------------" << std::endl;
@@ -112,25 +120,33 @@ int main(int argc, char * argv[])
         sem_common::semaphore_p(end_eff_sem_id);
         for (unsigned int j=0; j< robot->end_eff_->dof_; j++)
         {
-            robot->end_eff_->cur_positions_[j] = end_eff_shm->cur_positions_[j];
-            robot->end_eff_->cur_velocities_[j] = end_eff_shm->cur_velocities_[j];
-            robot->end_eff_->cur_efforts_[j] = end_eff_shm->cur_efforts_[j];
-
-            robot->end_eff_->cmd_positions_[j] = end_eff_shm->cmd_positions_[j];
-            robot->end_eff_->cmd_velocities_[j] = end_eff_shm->cmd_velocities_[j];
-            robot->end_eff_->cmd_efforts_[j] = end_eff_shm->cmd_efforts_[j];
-
-            robot->end_eff_->control_modes_[j] = end_eff_shm->control_modes_[j];
-
-            std::cout << "robot->end_eff_->cur_positions_[" << j << "]: " << robot->end_eff_->cur_positions_[j] << std::endl;
-            std::cout << "robot->end_eff_->cur_velocities_[" << j << "]: " << robot->end_eff_->cur_velocities_[j] << std::endl;
-            std::cout << "robot->end_eff_->cur_efforts_[" << j << "]: " << robot->end_eff_->cur_efforts_[j] << std::endl;
-        
-            std::cout << "robot->end_eff_->cmd_positions_[" << j << "]: " << robot->end_eff_->cmd_positions_[j] << std::endl;
-            std::cout << "robot->end_eff_->cmd_velocities_[" << j << "]: " << robot->end_eff_->cmd_velocities_[j] << std::endl;
-            std::cout << "robot->end_eff_->cmd_efforts_[" << j << "]: " << robot->end_eff_->cmd_efforts_[j] << std::endl;
-        
-            std::cout << "robot->end_eff_->control_modes_[" << j << "]: " << robot->end_eff_->control_modes_[j] << std::endl;
+            std::cout << "end_eff_shm->cur_positions_[" << j << "]: " 
+                << end_eff_shm->cur_positions_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->end_eff_->dof_; j++)
+        {
+            std::cout << "end_eff_shm->cur_velocities_[" << j << "]: " 
+                << end_eff_shm->cur_velocities_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->end_eff_->dof_; j++)
+        {
+            std::cout << "end_eff_shm->cur_efforts_[" << j << "]: " 
+                << end_eff_shm->cur_efforts_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->end_eff_->dof_; j++)
+        {
+            std::cout << "end_eff_shm->cmd_positions_[" << j << "]: " 
+                << end_eff_shm->cmd_positions_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->end_eff_->dof_; j++)
+        {
+            std::cout << "end_eff_shm->cmd_velocities_[" << j << "]: " 
+                << end_eff_shm->cmd_velocities_[j] << std::endl;
+        }
+        for (unsigned int j=0; j< robot->end_eff_->dof_; j++)
+        {
+            std::cout << "end_eff_shm->cmd_efforts_[" << j << "]: " 
+                << end_eff_shm->cmd_efforts_[j] << std::endl;
         }
         sem_common::semaphore_v(end_eff_sem_id);
         std::cout << "------------------------------------------------------" << std::endl;
