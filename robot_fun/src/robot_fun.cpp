@@ -31,6 +31,23 @@ RobotFun::RobotFun(const std::string & node_name)
         RCLCPP_ERROR(rclcpp::get_logger("RobotFun"), 
             "Create robot state semaphore failed.");
     }
+
+#ifdef USE_END_EFFECTOR
+  ///////////////////////////////////////////////////////////////////////////////////////////
+  end_eff_shm_id_ = shm_common::create_shm(robot_->end_eff_->shm_key_, &end_eff_shm_);
+  if (end_eff_shm_id_ == SHM_STATE_NO)
+  {
+      RCLCPP_ERROR(rclcpp::get_logger("RobotHardware"), 
+          "Create end-effector shared memory failed.");
+  }
+
+  end_eff_sem_id_ = sem_common::create_semaphore(robot_->end_eff_->sem_key_);
+  if (end_eff_sem_id_ == SEM_STATE_NO)
+  {
+      RCLCPP_ERROR(rclcpp::get_logger("RobotHardware"), 
+          "Create end-effector semaphore failed.");
+  }
+#endif
 }
 
 RobotFun::~RobotFun(){}
@@ -192,6 +209,69 @@ void RobotFun::get_end_eff_joint_efforts(std::vector<double> & efforts)
         efforts[j] = robot_state_shm_->cur_end_eff_efforts_[j];
     }
     sem_common::semaphore_v(robot_state_sem_id_);
+}
+
+int RobotFun::set_end_eff_joint_positions(std::vector<double> & positions)
+{
+    if (positions.size() != robot_->end_eff_->dof_)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("RobotFun"), 
+        "Failed to set end-effector joint positions, size error.");
+
+        return -1;
+    }
+
+    sem_common::semaphore_p(end_eff_sem_id_);
+    for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
+    {
+        end_eff_shm_->control_modes_[j] = robot_->end_eff_->position_mode_;
+        end_eff_shm_->cmd_positions_[j] = positions[j];
+    }
+    sem_common::semaphore_v(end_eff_sem_id_);
+
+    return 0;
+}
+
+int RobotFun::set_end_eff_joint_velocities(std::vector<double> & velocities)
+{
+    if (velocities.size() != robot_->end_eff_->dof_)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("RobotFun"), 
+        "Failed to set end-effector joint velocities, size error.");
+
+        return -1;
+    }
+
+    sem_common::semaphore_p(end_eff_sem_id_);
+    for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
+    {
+        end_eff_shm_->control_modes_[j] = robot_->end_eff_->velocity_mode_;
+        end_eff_shm_->cmd_velocities_[j] = velocities[j];
+    }
+    sem_common::semaphore_v(end_eff_sem_id_);
+
+    return 0;
+}
+
+int RobotFun::set_end_eff_joint_efforts(std::vector<double> & efforts)
+{
+    if (efforts.size() != robot_->end_eff_->dof_)
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("RobotFun"), 
+        "Failed to set end-effector joint efforts, size error.");
+
+        return -1;
+    }
+
+    sem_common::semaphore_p(end_eff_sem_id_);
+    for (unsigned int j=0; j< robot_->end_eff_->dof_; j++)
+    {
+        end_eff_shm_->control_modes_[j] = robot_->end_eff_->effort_mode_;
+        end_eff_shm_->cmd_efforts_[j] = efforts[j];
+    }
+    sem_common::semaphore_v(end_eff_sem_id_);
+
+    return 0;
 }
 #endif
 

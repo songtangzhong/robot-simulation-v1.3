@@ -9,6 +9,10 @@
 #include <process_commu/sem_common.h>
 #include <std_msgs/msg/float64_multi_array.hpp>
 
+#ifdef USE_END_EFFECTOR
+#include <process_commu/end_eff_shm.h>
+#endif
+
 namespace robot_fun
 {
 class RobotFun : public rclcpp::Node
@@ -29,6 +33,10 @@ public:
     void get_end_eff_joint_positions(std::vector<double> & positions);
     void get_end_eff_joint_velocities(std::vector<double> & velocities);
     void get_end_eff_joint_efforts(std::vector<double> & efforts);
+
+    int set_end_eff_joint_positions(std::vector<double> & positions);
+    int set_end_eff_joint_velocities(std::vector<double> & velocities);
+    int set_end_eff_joint_efforts(std::vector<double> & efforts);
 #endif
 
 private:
@@ -46,6 +54,12 @@ private:
     robot_state_shm::RobotStateShm *robot_state_shm_;
     int robot_state_shm_id_;
     int robot_state_sem_id_;
+
+#ifdef USE_END_EFFECTOR
+    end_eff_shm::EndEffShm *end_eff_shm_;
+    int end_eff_shm_id_;
+    int end_eff_sem_id_;
+#endif
 };
 
 }
