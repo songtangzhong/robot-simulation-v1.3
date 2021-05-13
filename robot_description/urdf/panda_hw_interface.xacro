@@ -6,8 +6,6 @@
     <ros2_control name="panda_hw_interface" type="system">
       <hardware>
         <plugin>robot_hw/RobotHardware</plugin>
-        <param name="start_duration_sec">3.0</param>
-        <param name="stop_duration_sec">3.0</param>
       </hardware>
       <joint name="panda_joint1">
         <command_interface name="position">
