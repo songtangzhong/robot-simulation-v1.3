@@ -69,8 +69,6 @@ ros2 run robot_fun test_set_arm_joint_positions
 9. Test switch controllers.
 ```
 ros2 run robot_hw_interface test_switch_controller effort_controllers position_controllers
-ros2 run robot_hw_interface test_swtich_controller velocity_controllers effort_controllers
-ros2 run robot_hw_interface test_swtich_controller position_controllers velocity_controllers 
 ```
 
 10. Detailed illustration of the project will be added in the future.
