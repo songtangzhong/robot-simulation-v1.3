@@ -2,12 +2,15 @@
 #include <memory>
 
 using std::placeholders::_1;
+using namespace std::chrono_literals;
 
 namespace robot_fun
 {
 RobotFun::RobotFun(const std::string & node_name)
 : rclcpp::Node(node_name)
 {
+    nh_ = std::make_shared<rclcpp::Node>("switch_controller_client");
+
     robot_state_sub_ = this->create_subscription<sensor_msgs::msg::JointState>(
       "/joint_states", 100, std::bind(&RobotFun::callback_robot_state_sub_, this, _1));
 
@@ -17,6 +20,9 @@ RobotFun::RobotFun(const std::string & node_name)
         "/velocity_controllers/commands", 100);
     cmd_efforts_pub_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
         "/effort_controllers/commands", 100);
+
+    switch_controller_cli_ = nh_->create_client<controller_manager_msgs::srv::SwitchController>
+        ("/controller_manager/switch_controller");
     
     robot_state_shm_id_ = shm_common::create_shm(robot_->state_shm_key_, &robot_state_shm_);
     if (robot_state_shm_id_ == SHM_STATE_NO)
@@ -215,6 +221,116 @@ std::string RobotFun::get_arm_control_mode(void)
     sem_common::semaphore_v(arm_sem_id_);
 
     return control_mode;
+}
+
+int RobotFun::arm_switch_controller(const std::string & start_controller)
+{
+    std::string control_mode = get_arm_control_mode();
+    std::string cur_controller;
+
+    if (control_mode == "position_mode")
+    {
+        cur_controller = "position_controllers";
+    }
+    else if (control_mode == "velocity_mode")
+    {
+        cur_controller = "velocity_controllers";
+    }
+    else if (control_mode == "effort_mode")
+    {
+        cur_controller = "effort_controllers";
+    }
+
+    if (cur_controller == start_controller)
+    {
+        return 1;
+    }
+
+    std::vector<std::string> start_controller_ = {start_controller};
+    std::vector<std::string> stop_controller_ = {cur_controller};
+    auto request = std::make_shared<controller_manager_msgs::srv::SwitchController::Request>();
+    request->start_controllers = start_controller_;
+    request->stop_controllers = stop_controller_;
+    request->strictness = request->BEST_EFFORT;
+    request->start_asap = false;
+    request->timeout = rclcpp::Duration(static_cast<rcl_duration_value_t>(0.0));
+    while (!switch_controller_cli_->wait_for_service(1s))
+    {
+        if (!rclcpp::ok())
+        {
+            RCLCPP_ERROR(rclcpp::get_logger("switch_controller"), 
+                "Interrupted while waiting for the service. Exiting.");
+        }
+
+        RCLCPP_INFO(rclcpp::get_logger("switch_controller"), 
+            "service [/controller_manager/switch_controller] not available, waiting again...");
+    }
+
+    auto result = switch_controller_cli_->async_send_request(request);
+    // Wait for the result.
+    if (rclcpp::spin_until_future_complete(nh_, result) == rclcpp::FutureReturnCode::SUCCESS)
+    {
+        if (start_controller == "position_controllers")
+        {
+            // Set current arm joint positions to commands by ros2 controller manager,
+            // not by shared memory.
+            std::vector<double> cur_arm_positions;
+            cur_arm_positions.resize(ARM_DOF);
+            get_arm_joint_positions(cur_arm_positions);
+            auto cmd = std_msgs::msg::Float64MultiArray();
+            sem_common::semaphore_p(arm_sem_id_);
+            for (unsigned int j=0; j< robot_->arm_->dof_; j++)
+            {
+                cmd.data.push_back(cur_arm_positions[j]);
+                arm_shm_->control_modes_[j] = robot_->arm_->position_mode_;
+            }
+            sem_common::semaphore_v(arm_sem_id_);
+            cmd_positions_pub_->publish(cmd);
+        }
+        else if (start_controller == "velocity_controllers")
+        {
+            // Set current arm joint velocities (zeros) to commands by ros2 controller manager,
+            // not by shared memory.
+            std::vector<double> cur_arm_velocities;
+            cur_arm_velocities.resize(ARM_DOF);
+            auto cmd = std_msgs::msg::Float64MultiArray();
+            sem_common::semaphore_p(arm_sem_id_);
+            for (unsigned int j=0; j< robot_->arm_->dof_; j++)
+            {
+                cur_arm_velocities[j] = 0;
+                cmd.data.push_back(cur_arm_velocities[j]);
+                arm_shm_->control_modes_[j] = robot_->arm_->velocity_mode_;
+            }
+            sem_common::semaphore_v(arm_sem_id_);
+            cmd_velocities_pub_->publish(cmd);
+        }
+        else if (start_controller == "effort_controllers")
+        {
+            // Set current arm joint efforts (zeros) to commands by ros2 controller manager,
+            // not by shared memory.
+            std::vector<double> cur_arm_efforts;
+            cur_arm_efforts.resize(ARM_DOF);
+            auto cmd = std_msgs::msg::Float64MultiArray();
+            sem_common::semaphore_p(arm_sem_id_);
+            for (unsigned int j=0; j< robot_->arm_->dof_; j++)
+            {
+                cur_arm_efforts[j] = 0;
+                cmd.data.push_back(cur_arm_efforts[j]);
+                arm_shm_->control_modes_[j] = robot_->arm_->effort_mode_;
+            }
+            sem_common::semaphore_v(arm_sem_id_);
+            cmd_efforts_pub_->publish(cmd);
+        }
+    }
+    else
+    {
+        RCLCPP_ERROR(rclcpp::get_logger("switch_controller"), 
+            "Failed to switch to %s.", start_controller.c_str());
+
+        return -1;
+    }
+
+    return 1;
 }
 
 #ifdef USE_END_EFFECTOR

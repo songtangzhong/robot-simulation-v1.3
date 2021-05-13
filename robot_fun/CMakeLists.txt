@@ -26,6 +26,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(robot_info REQUIRED)
 find_package(process_commu REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(controller_manager_msgs REQUIRED)
 
 add_library(${PROJECT_NAME} SHARED
   src/robot_fun.cpp
@@ -46,6 +47,7 @@ ament_target_dependencies(${PROJECT_NAME}
   robot_info
   process_commu
   std_msgs
+  controller_manager_msgs
 )
 
 add_executable(trigger_state_sub
@@ -109,6 +111,20 @@ ament_target_dependencies(test_get_arm_control_mode
   rclcpp
 )
 
+add_executable(test_switch_to_target_controller
+  test/test_switch_to_target_controller.cpp
+)
+target_include_directories(test_switch_to_target_controller
+  PRIVATE
+  include
+)
+target_link_libraries(test_switch_to_target_controller
+  ${PROJECT_NAME}
+)
+ament_target_dependencies(test_switch_to_target_controller
+  rclcpp
+)
+
 install(DIRECTORY include/
   DESTINATION include
 )
@@ -126,6 +142,7 @@ install(TARGETS
   test_trigger
   test_set_arm_joint_positions
   test_get_arm_control_mode
+  test_switch_to_target_controller
   RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
@@ -143,6 +160,7 @@ ament_export_dependencies(
   robot_info
   process_commu
   std_msgs
+  controller_manager_msgs
 )
 
 ament_package()
