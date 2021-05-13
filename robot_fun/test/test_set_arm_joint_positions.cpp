@@ -9,6 +9,15 @@ int main(int argc, char ** argv)
     std::shared_ptr<robot_fun::RobotFun> robot = 
         std::make_shared<robot_fun::RobotFun>("test_robot_fun");
 
+    rclcpp::WallRate loop_rate(1);
+    unsigned int count = 5;
+    for (unsigned int j=0; j<=count; j++)
+    {
+        RCLCPP_INFO(rclcpp::get_logger("test_robot_fun"), 
+            "Waitting for the operating environment to be ready... %d seconds.", count-j);
+        loop_rate.sleep();
+    }
+
     std::vector<double> cur_arm_positions_1;
     std::vector<double> cur_arm_positions_2;
     cur_arm_positions_1.resize(ARM_DOF);

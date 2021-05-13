@@ -10,6 +10,15 @@ int main(int argc, char ** argv)
         std::make_shared<robot_fun::RobotFun>("test_trigger");
 
     rclcpp::WallRate loop_rate(1);
+    unsigned int count = 5;
+    for (unsigned int j=0; j<=count; j++)
+    {
+        RCLCPP_INFO(rclcpp::get_logger("test_trigger"), 
+            "Waitting for the operating environment to be ready... %d seconds.", count-j);
+        loop_rate.sleep();
+    }
+
+    rclcpp::WallRate loop_rate(1);
     std::vector<double> cur_arm_positions;
     std::vector<double> cur_arm_velocities;
     std::vector<double> cur_arm_efforts;
