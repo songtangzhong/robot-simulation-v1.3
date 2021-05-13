@@ -20,10 +20,13 @@ int main(int argc, char ** argv)
 
     std::vector<double> cur_arm_positions_1;
     std::vector<double> cur_arm_positions_2;
-    std::vector<double> cur_end_eff_positions;
     cur_arm_positions_1.resize(ARM_DOF);
     cur_arm_positions_2.resize(ARM_DOF);
+
+#ifdef USE_END_EFFECTOR
+    std::vector<double> cur_end_eff_positions;
     cur_end_eff_positions.resize(END_EFF_DOF);
+#endif
 
     while (rclcpp::ok())
     {
@@ -38,12 +41,14 @@ int main(int argc, char ** argv)
         std::this_thread::sleep_for(std::chrono::seconds(5));
         robot->set_arm_joint_positions(cur_arm_positions_2);
 
+#ifdef USE_END_EFFECTOR
         robot->get_end_eff_joint_positions(cur_end_eff_positions);
         for (unsigned int j=0; j<END_EFF_DOF; j++)
         {
             cur_end_eff_positions[j] += 0.03;
         }
         robot->set_end_eff_joint_positions(cur_end_eff_positions);
+#endif
 
         break;
     }
